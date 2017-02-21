@@ -1,13 +1,14 @@
 {
-  "name": "az-iot-gw",
+  "name": "az-iot-gw-win",
   "version": "1.0.0",
-  "description": "Azure IoT Gateway.",
+  "description": "Azure IoT Gateway for Windows.",
   "repository": {
     "type": "git",
     "url": "https://github.com/Azure/azure-iot-gateway-sdk"
   },
+  "main": "index.js",
   "bin": {
-    "az-iot-gw" : "./bin/main.js"
+    "az-iot-gw-win" : "./bin/main.js"
   },
   "scripts": {
     "gw": "node ./bin/main.js"
@@ -15,12 +16,12 @@
   "keywords": [
     "Azure",
     "IoT",
-    "Gateway"
+    "Gateway",
+    "Windows"
   ],
   "author": "Microsoft Corporation",
   "license": "MIT",
   "dependencies": {
-    "az-iot-gw-win": "~1.0.0"
   },
   "devDependencies": {
   }

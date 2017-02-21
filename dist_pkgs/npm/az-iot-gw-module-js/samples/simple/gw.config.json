@@ -2,10 +2,7 @@
   "loaders": [
     {
       "type": "node",
-      "name": "node",
-      "configuration": {
-        "binding.path": "bindings\\win\\nodejs_binding.dll"
-      }
+      "name": "node"
     }
   ],
   "modules": [
@@ -28,25 +25,9 @@
         }
       },
       "args": null
-    },
-    {
-      "name": "Logger",
-      "loader": {
-        "name": "native",
-        "entrypoint": {
-          "module.path": "modules\\native\\win\\logger.dll"
-        }
-      },
-      "args": {
-        "filename": "log.txt"
-      }
     }
   ],
   "links": [
-    {
-      "source": "*",
-      "sink": "Logger"
-    },
     {
       "source": "node_sensor",
       "sink": "node_printer"

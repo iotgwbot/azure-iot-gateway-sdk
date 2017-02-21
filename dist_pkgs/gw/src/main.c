@@ -14,7 +14,7 @@ const char* GATEWAY_STATUS_QUITTING = "Gateway is quitting.\r\n";
 const char* USAGE_STRING = "\r\nUsage:\r\ngw <path to config json>\r\n\r\n";
 
 void print_usage() {
-  printf(USAGE_STRING);
+  printf("%s", USAGE_STRING);
 }
 
 bool validate_args(int argc, char* argv[])
@@ -51,7 +51,7 @@ int main(int argc, char* argv[]) {
       return 1;
   }
 
-  printf(GATEWAY_STATUS_RUNNING);
+  printf("%s", GATEWAY_STATUS_RUNNING);
 
   // Provide Key to break.
   // TODO: shall we remove it ?
@@ -60,7 +60,7 @@ int main(int argc, char* argv[]) {
     enter = getchar();
   }
 
-  printf(GATEWAY_STATUS_QUITTING);
+  printf("%s", GATEWAY_STATUS_QUITTING);
 
   Gateway_Destroy(gateway);
   platform_deinit();

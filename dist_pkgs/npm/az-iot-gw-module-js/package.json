@@ -7,7 +7,7 @@
     "url": "https://github.com/Azure/azure-iot-gateway-sdk"
   },
   "scripts": {
-
+    "sample": "./node_modules/.bin/az-iot-gw ./samples/simple/gw.config.json"
   },
   "keywords": [
     "Azure",
@@ -20,7 +20,8 @@
   "author": "Microsoft Corporation",
   "license": "MIT",
   "dependencies": {
-    
+    "az-iot-gw": "~1.0.0"
   },
-  "devDependencies": {}
+  "devDependencies": {
+  }
 }

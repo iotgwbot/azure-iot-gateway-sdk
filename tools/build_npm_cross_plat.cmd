@@ -17,33 +17,22 @@ for %%i in ("%build-root%") do set build-root=%%~fi
 for %%i in ("%root%") do set root=%%~fi
 
 rem Clear the nodejs build folder so we have a fresh build
-rmdir /s/q %build-root%
-mkdir %build-root%
+rmdir /s/q %build-root%\az-iot-gw
+rmdir /s/q %build-root%\az-iot-gw-module-js
+mkdir %build-root%\az-iot-gw
+mkdir %build-root%\az-iot-gw-module-js
 
 pushd %build-root%
 
-rem Copy package definition and README files into npm folder.
-xcopy %root%\dist_pkgs\npm .\ /S /Q
+rem Copy package definition files into npm folder.
+xcopy %root%\dist_pkgs\npm\az-iot-gw .\az-iot-gw /S /Q
+xcopy %root%\dist_pkgs\npm\az-iot-gw-module-js .\az-iot-gw-module-js /S /Q
 copy %root%\LICENSE.txt az-iot-gw\LICENSE
 copy %root%\LICENSE.txt az-iot-gw-module-js\LICENSE
 
-rem copy binary files for azure iot gateway.
-mkdir az-iot-gw\bin\win
-copy %root%\build\core\Debug\gateway.dll az-iot-gw\bin\win
-copy %root%\install-deps\bin\aziotsharedutil.dll az-iot-gw\bin\win
-copy %root%\install-deps\bin\\nanomsg.dll az-iot-gw\bin\win
-copy %root%\build_nodejs\node\Release\node.dll az-iot-gw\bin\win
-copy %root%\build\dist_pkgs\gw\Debug\gw.exe az-iot-gw\bin\win
-
-
 rem copy files for azure iot gateway module development.
-mkdir az-iot-gw-module-js\bindings\win
-copy %root%\build\bindings\nodejs\Debug\nodejs_binding.dll az-iot-gw-module-js\bindings\win
-mkdir az-iot-gw-module-js\modules\native\win
-copy %root%\build\modules\logger\Debug\logger.dll az-iot-gw-module-js\modules\native\win
 mkdir az-iot-gw-module-js\samples\simple\modules
 xcopy %root%\samples\nodejs_simple_sample\nodejs_modules az-iot-gw-module-js\samples\simple\modules /S /Q
-
 
 popd
 
