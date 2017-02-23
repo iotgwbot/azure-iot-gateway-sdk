@@ -1,0 +1,27 @@
+{
+  "name": "az-iot-gw-module-js",
+  "version": "1.0.0",
+  "description": "Azure IoT Gateway module development kit for JS.",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Azure/azure-iot-gateway-sdk"
+  },
+  "scripts": {
+    "sample": "./node_modules/.bin/az-iot-gw ./samples/simple/gw.config.json"
+  },
+  "keywords": [
+    "Azure",
+    "IoT",
+    "Gateway",
+    "Module",
+    "JS",
+    "Node"
+  ],
+  "author": "Microsoft Corporation",
+  "license": "MIT",
+  "dependencies": {
+    "az-iot-gw": "~1.0.0"
+  },
+  "devDependencies": {
+  }
+}

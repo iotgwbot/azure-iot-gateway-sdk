@@ -1,0 +1,28 @@
+{
+  "name": "az-iot-gw-lin",
+  "version": "1.0.0",
+  "description": "Azure IoT Gateway for Linux.",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Azure/azure-iot-gateway-sdk"
+  },
+  "main": "index.js",
+  "bin": {
+    "az-iot-gw-lin" : "./bin/main.js"
+  },
+  "scripts": {
+    "gw": "node ./bin/main.js"
+  },
+  "keywords": [
+    "Azure",
+    "IoT",
+    "Gateway",
+    "Linux"
+  ],
+  "author": "Microsoft Corporation",
+  "license": "MIT",
+  "dependencies": {
+  },
+  "devDependencies": {
+  }
+}
