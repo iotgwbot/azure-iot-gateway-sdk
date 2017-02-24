@@ -35,14 +35,14 @@ mkdir %build-root%
 
 pushd %build-root%
 
-rem Copy windows package definition files into npm folder.
+rem Copy maven package source files
 mkdir .\src
 xcopy %root%\dist_pkgs\maven\az-iot-gw-win\src .\src /S /Q
 copy %root%\dist_pkgs\maven\az-iot-gw-win\pom.xml .\pom.xml
 mkdir .\src\main\resources
 copy %root%\License.txt .\src\main\resources\License.txt
 
-rem Copy binary files for azure iot gateway.
+rem Copy binary files for azure iot gateway to resources
 copy %root%\build\core\%build-config%\gateway.dll    .\src\main\resources
 copy %root%\install-deps\bin\aziotsharedutil.dll     .\src\main\resources
 copy %root%\install-deps\bin\nanomsg.dll             .\src\main\resources
