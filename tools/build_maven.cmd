@@ -8,7 +8,7 @@ rem // resolve to fully qualified path
 for %%i in ("%build-root%") do set build-root=%%~fi
 
 REM -- Build Java Binding --
-cd %build-root%\build\samples\java_sample\%1
+cd %build-root%\dist_pkgs\maven\az-iot-gw-win
 call mvn clean install
 if errorlevel 1 goto :eof
 cd %build-root%
