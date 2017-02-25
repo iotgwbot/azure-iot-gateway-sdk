@@ -34,6 +34,8 @@ copy %root%\build_nodejs\node\Release\node.dll az-iot-gw-win\bin
 copy %root%\build\bindings\nodejs\Debug\nodejs_binding.dll az-iot-gw-win\bin
 copy %root%\build\dist_pkgs\gw\Debug\gw.exe az-iot-gw-win\bin
 
+npm pack .\az-iot-gw-win
+
 popd
 
 goto :eof

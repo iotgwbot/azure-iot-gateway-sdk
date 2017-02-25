@@ -18,9 +18,7 @@ set(LIBS ${LIBS} gateway)
 
 add_executable(gw ${gw_headers} ${gw_sources})
 target_link_libraries(gw ${LIBS})
+linkSharedUtil(gw)
 
 # make gw depend on other modules
 add_dependencies(gw nodejs_binding dotnet_binding java_binding)
-
-linkSharedUtil(gw)
-install_broker(gw ${CMAKE_CURRENT_BINARY_DIR}/$(Configuration))

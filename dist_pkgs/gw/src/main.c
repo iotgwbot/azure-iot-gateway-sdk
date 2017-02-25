@@ -25,7 +25,7 @@ bool validate_args(int argc, char* argv[])
     return false;
   }
 
-  size_t i = 1;
+  int i = 1;
   while (i < EXPECTED_PARAMS && strlen(argv[i]) != 0) {
     ++i;
   }

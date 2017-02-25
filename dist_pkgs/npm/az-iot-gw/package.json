@@ -20,7 +20,8 @@
   "author": "Microsoft Corporation",
   "license": "MIT",
   "dependencies": {
-    "az-iot-gw-win": "~1.0.0"
+    "az-iot-gw-win": "~1.0.0",
+    "az-iot-gw-lin": "~1.0.0"
   },
   "devDependencies": {
   }

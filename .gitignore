@@ -225,3 +225,6 @@ Testing/Temporary/CTestCostData.txt
 
 # ignore package build folder
 build_packages/**
+
+# ignore package distribution definition files
+!dist_pkgs/**
