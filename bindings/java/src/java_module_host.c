@@ -54,6 +54,7 @@ typedef signed char jbyte;
 #include "java_module_host.h"
 #include "azure_c_shared_utility/xlogging.h"
 #include "azure_c_shared_utility/gballoc.h"
+#include "azure_c_shared_utility/crt_abstractions.h"
 #include "java_module_host_manager.h"
 #include "module_access.h"
 
@@ -91,7 +92,7 @@ static jmethodID get_module_method(JAVA_MODULE_HANDLE_DATA* module, const char* 
 static MODULE_HANDLE JavaModuleHost_Create(BROKER_HANDLE broker, const void* configuration)
 {
     JAVA_MODULE_HANDLE_DATA* result;
-    if(broker == NULL || configuration == NULL)
+    if (broker == NULL || configuration == NULL)
     {
         /*Codes_SRS_JAVA_MODULE_HOST_14_001: [This function shall return NULL if broker is NULL.]*/
         /*Codes_SRS_JAVA_MODULE_HOST_14_002: [This function shall return NULL if configuration is NULL.]*/
@@ -213,7 +214,17 @@ static MODULE_HANDLE JavaModuleHost_Create(BROKER_HANDLE broker, const void* con
                                         {
                                             jmethodID jModule_constructor = JNIFunc(result->env, GetMethodID, jModule_class, CONSTRUCTOR_METHOD_NAME, MODULE_CONSTRUCTOR_DESCRIPTOR);
                                             exception = JNIFunc(result->env, ExceptionOccurred);
+                                            bool noargsConstructor = false;
+                                            /*Codes_SRS_JAVA_MODULE_HOST_24_059: [If the constructor with three parameters was not found in the Java module class, this function shall find no-argument constructor, create an instance of the module and call `create` method from the module.]*/
                                             if (jModule_constructor == NULL || exception)
+                                            {
+                                                noargsConstructor = true;
+                                                JNIFunc(result->env, ExceptionClear);
+                                                jModule_constructor = JNIFunc(result->env, GetMethodID, jModule_class, CONSTRUCTOR_METHOD_NAME, MODULE_EMPTY_CONSTRUCTOR_DESCRIPTOR);
+                                                exception = JNIFunc(result->env, ExceptionOccurred);
+                                            }
+
+                                            if (noargsConstructor && (jModule_constructor == NULL || exception))
                                             {
                                                 /*Codes_SRS_JAVA_MODULE_HOST_14_016: [This function shall return NULL if any returned jclass, jmethodID, or jobject is NULL.]*/
                                                 /*Codes_SRS_JAVA_MODULE_HOST_14_017: [This function shall return NULL if any JNI function fails.]*/
@@ -239,8 +250,41 @@ static MODULE_HANDLE JavaModuleHost_Create(BROKER_HANDLE broker, const void* con
                                                 }
                                                 else
                                                 {
-                                                    jobject jModule_object = NewObjectInternal(result->env, jModule_class, jModule_constructor, 3, (jlong)result, jBroker_object, jModule_configuration);
-                                                    exception = JNIFunc(result->env, ExceptionOccurred);
+                                                    jobject jModule_object;
+                                                    if (noargsConstructor)
+                                                    {
+                                                        jModule_object = NewObjectInternal(result->env, jModule_class, jModule_constructor, 0);
+                                                        exception = JNIFunc(result->env, ExceptionOccurred);
+
+                                                        if (jModule_object == NULL || exception)
+                                                        {
+                                                            jModule_object = NULL;
+                                                        }
+                                                        else
+                                                        {
+                                                            jmethodID jModule_create = JNIFunc(result->env, GetMethodID, jModule_class, MODULE_CREATE_METHOD_NAME, MODULE_CREATE_DESCRIPTOR);
+                                                            exception = JNIFunc(result->env, ExceptionOccurred);
+                                                            if (jModule_create == NULL || exception)
+                                                            {
+                                                                jModule_object = NULL;
+                                                            }
+                                                            else
+                                                            {
+                                                                CallVoidMethodInternal(result->env, jModule_object, jModule_create, 3, (jlong)result, jBroker_object, jModule_configuration);
+                                                                exception = JNIFunc(result->env, ExceptionOccurred);
+                                                                if (exception)
+                                                                {
+                                                                    jModule_object = NULL;
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                    else
+                                                    {
+                                                        jModule_object = NewObjectInternal(result->env, jModule_class, jModule_constructor, 3, (jlong)result, jBroker_object, jModule_configuration);
+                                                        exception = JNIFunc(result->env, ExceptionOccurred);
+                                                    }
+
                                                     if (jModule_object == NULL || exception)
                                                     {
                                                         /*Codes_SRS_JAVA_MODULE_HOST_14_016: [This function shall return NULL if any returned jclass, jmethodID, or jobject is NULL.]*/
@@ -287,7 +331,7 @@ static void JavaModuleHost_Destroy(MODULE_HANDLE module)
 
         /*Codes_SRS_JAVA_MODULE_HOST_14_039: [This function shall attach the JVM to the current thread. ]*/
         jint jni_result = JNIFunc(moduleHandle->jvm, AttachCurrentThread, (void**)(&(moduleHandle->env)), NULL);
-        if(jni_result != JNI_OK)
+        if (jni_result != JNI_OK)
         {
             /*Codes_SRS_JAVA_MODULE_HOST_14_041: [ This function shall exit if any JNI function fails. ]*/
             LogError("Could not attach the current thread to the JVM. (Result: %i)", jni_result);
@@ -467,7 +511,7 @@ static void JavaModuleHost_Start(MODULE_HANDLE module)
 
 static void* JavaModuleHost_ParseConfigurationFromJson(const char* configuration)
 {
-    char* config_str; 
+    char* config_str;
 
     /*Codes_SRS_JAVA_MODULE_HOST_14_028: [This function shall allocate memory for the configuration parameter and copy it.]*/
     if (mallocAndStrcpy_s(&config_str, configuration) != 0)
@@ -757,9 +801,10 @@ static int init_vm_options(JavaVMInitArgs* jvm_args, VECTOR_HANDLE* options_stri
                     }
                 }
                 if (jvm_options->debug == 1 && result == 0) {
-                    char debug_str[64];
+                    char debug_str[DEBUG_OPTIONS_STR_SIZE];
+                    int valid_port = jvm_options->debug_port > 0 && jvm_options->debug_port <= DEBUG_PORT_MAX_VALUE ? jvm_options->debug_port : DEBUG_PORT_DEFAULT;
                     /*Codes_SRS_JAVA_MODULE_HOST_14_033:[The function shall concatenate the user supplied options to the option key names.]*/
-                    if (sprintf(debug_str, "-Xrunjdwp:transport=dt_socket,address=%i,server=y,suspend=y", jvm_options->debug_port != 0 ? jvm_options->debug_port : DEBUG_PORT_DEFAULT) < 0)
+                    if (sprintf_s(debug_str, DEBUG_OPTIONS_STR_SIZE, "-Xrunjdwp:transport=dt_socket,address=%i,server=y,suspend=y", valid_port) < 0)
                     {
                         LogError("sprintf failed.");
                         result = __LINE__;
@@ -768,7 +813,7 @@ static int init_vm_options(JavaVMInitArgs* jvm_args, VECTOR_HANDLE* options_stri
                     {
                         /*Codes_SRS_JAVA_MODULE_HOST_14_032:[ The function shall construct a new STRING_HANDLE for each option. ]*/
                         STRING_HANDLE debug_1 = STRING_construct("-Xrs");
-                        STRING_HANDLE debug_2 = STRING_construct("-Xdebug"); 
+                        STRING_HANDLE debug_2 = STRING_construct("-Xdebug");
                         STRING_HANDLE debug_3 = STRING_construct(debug_str);
                         if (debug_1 == NULL || debug_2 == NULL || debug_3 == NULL)
                         {
@@ -782,8 +827,8 @@ static int init_vm_options(JavaVMInitArgs* jvm_args, VECTOR_HANDLE* options_stri
                         else
                         {
                             /*Codes_SRS_JAVA_MODULE_HOST_14_034:[ The function shall push the new STRING_HANDLE onto the newly created vector. ]*/
-                            if (VECTOR_push_back(*options_strings, &debug_1, 1) != 0 || 
-                                VECTOR_push_back(*options_strings, &debug_2, 1) != 0 || 
+                            if (VECTOR_push_back(*options_strings, &debug_1, 1) != 0 ||
+                                VECTOR_push_back(*options_strings, &debug_2, 1) != 0 ||
                                 VECTOR_push_back(*options_strings, &debug_3, 1) != 0)
                             {
                                 /*Codes_SRS_JAVA_MODULE_HOST_14_035:[ If any operation fails, the function shall delete the STRING_HANDLE structures, VECTOR_HANDLE and JavaVMOption array. ]*/
@@ -859,7 +904,7 @@ static int init_vm_options(JavaVMInitArgs* jvm_args, VECTOR_HANDLE* options_stri
                                 }
                             }
                         }
-                        
+
                     }
                 }
             }
@@ -914,11 +959,11 @@ static void destroy_module_internal(JAVA_MODULE_HANDLE_DATA* module, bool decref
 static jobject NewObjectInternal(JNIEnv* env, jclass clazz, jmethodID methodID, int args_count, ...)
 {
     va_list args;
-    
+
     va_start(args, args_count);
     jobject obj = JNIFunc(env, NewObjectV, clazz, methodID, args);
     va_end(args);
-    
+
     return obj;
 }
 

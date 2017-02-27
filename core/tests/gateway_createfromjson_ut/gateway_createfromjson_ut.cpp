@@ -15,6 +15,8 @@
 #include "../src/gateway_internal.h"
 #include <parson.h>
 
+#include "azure_c_shared_utility/vector_types_internal.h"
+
 #define DUMMY_JSON_PATH "x.json"
 #define MISCONFIG_JSON_PATH "invalid_json.json"
 #define MISSING_INFO_JSON_PATH "missing_info_json.json"
@@ -958,10 +960,6 @@ TEST_FUNCTION(Gateway_Create_Start_fails_returns_null)
         .IgnoreArgument(1);
     STRICT_EXPECTED_CALL(mocks, VECTOR_size(IGNORED_PTR_ARG))
         .IgnoreArgument(1);
-    STRICT_EXPECTED_CALL(mocks, VECTOR_size(IGNORED_PTR_ARG))
-        .IgnoreArgument(1);
-    STRICT_EXPECTED_CALL(mocks, VECTOR_size(IGNORED_PTR_ARG))
-        .IgnoreArgument(1);
     STRICT_EXPECTED_CALL(mocks, Broker_RemoveLink(IGNORED_PTR_ARG,IGNORED_PTR_ARG))
         .IgnoreArgument(1)
         .IgnoreArgument(2);
@@ -980,14 +978,6 @@ TEST_FUNCTION(Gateway_Create_Start_fails_returns_null)
     STRICT_EXPECTED_CALL(mocks, VECTOR_erase(IGNORED_PTR_ARG,IGNORED_PTR_ARG, 1))
         .IgnoreArgument(1)
         .IgnoreArgument(2);
-    STRICT_EXPECTED_CALL(mocks, VECTOR_find_if(IGNORED_PTR_ARG, IGNORED_PTR_ARG, IGNORED_PTR_ARG))
-        .IgnoreArgument(1)
-        .IgnoreArgument(2)
-        .IgnoreArgument(3);
-    STRICT_EXPECTED_CALL(mocks, VECTOR_find_if(IGNORED_PTR_ARG, IGNORED_PTR_ARG, IGNORED_PTR_ARG))
-        .IgnoreArgument(1)
-        .IgnoreArgument(2)
-        .IgnoreArgument(3);
     STRICT_EXPECTED_CALL(mocks, Broker_RemoveModule(IGNORED_PTR_ARG,IGNORED_PTR_ARG))
         .IgnoreArgument(1)
         .IgnoreArgument(2);

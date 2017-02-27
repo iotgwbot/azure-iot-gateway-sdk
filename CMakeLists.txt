@@ -71,10 +71,12 @@ option(enable_java_binding "set enable_java_binding to ON to enable building of 
 option(enable_nodejs_binding "set enable_nodejs_binding to ON to enable building of Node JS binding (default is OFF)" OFF)
 option(run_as_a_service "Flags that we have the goal of running gateway as a service for samples and OS that supports it." OFF)
 option(enable_dotnet_binding "set enable_dotnet_binding to ON to build dotnet binding host binaries (default is OFF)" OFF)
+option(enable_dotnet_core_binding "set enable_dotnet_core_binding to ON to build dotnet core binding host binaries (default is OFF)" OFF)
 option(enable_ble_module "set enable_ble_module to OFF to remove ble module from gateway build (default is ON)" ON)
 option(use_amqp "set use_amqp to ON if amqp is to be used, set to OFF to not use amqp" ON)
 option(use_http "set use_http to ON if http is to be used, set to OFF to not use http" ON)
 option(use_mqtt "set use_mqtt to ON if mqtt is to be used, set to OFF to not use mqtt" ON)
+option(use_xplat_uuid "use the SDK's platform-independent UUID implementation (default is OFF)" OFF)
 
 SET(use_condition ON CACHE BOOL "Build C shared utility with condition code" FORCE)
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
@@ -267,7 +269,20 @@ elseif(${ARCHITECTURE} STREQUAL "x86")
    set(dotnet_printer_module_dll ${CMAKE_CURRENT_BINARY_DIR}/../bindings/dotnet/dotnet-binding/PrinterModule/bin/x86/$(Configuration)/PrinterModule.dll CACHE INTERNAL "The location of the PrinterModule.dll (windows)" FORCE)
 endif()
 
-set(dotnet_host_binding_dll ${CMAKE_CURRENT_BINARY_DIR}/bindings/dotnet/$(Configuration)/dotnet.dll CACHE INTERNAL "The location of dotnet.dll" FORCE)
+set(dotnet_host_binding_dll ${CMAKE_CURRENT_BINARY_DIR}/bindings/dotnet/${CMAKE_BUILD_TYPE}/dotnet.dll CACHE INTERNAL "The location of dotnet.dll" FORCE)
+
+
+set(dotnet_core_managed_binding_dll ${CMAKE_CURRENT_BINARY_DIR}/../bindings/dotnetcore/dotnet-core-binding/Microsoft.Azure.IoT.Gateway/bin/${CMAKE_BUILD_TYPE}/netstandard1.6/Microsoft.Azure.IoT.Gateway.dll CACHE INTERNAL "The location of the Microsoft.Azure.IoT.Gateway.dll" FORCE)
+
+set(dotnet_core_sensor_module_dll ${CMAKE_CURRENT_BINARY_DIR}/../bindings/dotnetcore/dotnet-core-binding/SensorModule/bin/${CMAKE_BUILD_TYPE}/netstandard1.6/SensorModule.dll CACHE INTERNAL "The location of the SensorModule.dll" FORCE)
+
+set(dotnet_core_printer_module_dll ${CMAKE_CURRENT_BINARY_DIR}/../bindings/dotnetcore/dotnet-core-binding/PrinterModule/bin/${CMAKE_BUILD_TYPE}/netstandard1.6/PrinterModule.dll CACHE INTERNAL "The location of the PrinterModule.dll" FORCE)
+
+set(dotnet_core_e2etest_module_dll ${CMAKE_CURRENT_BINARY_DIR}/../bindings/dotnetcore/dotnet-core-binding/E2ETestModule/bin/${CMAKE_BUILD_TYPE}/netstandard1.6/E2ETestModule.dll CACHE INTERNAL "The location of the E2ETestModule.dll" FORCE)
+
+set(dotnet_core_host_binding_dll ${CMAKE_CURRENT_BINARY_DIR}/bindings/dotnetcore/$(Configuration)/dotnetcore.dll CACHE INTERNAL "The location of dotnetcore.dll" FORCE)
+
+set(dotnet_core_host_binding_so ${CMAKE_CURRENT_BINARY_DIR}/bindings/dotnetcore/libdotnetcore.so CACHE INTERNAL "The location of libdotnetcore.so" FORCE)
 
 function(install_binaries whatIsBuilding whatIsBuildingLocation whatIsBinaryLocation)
   add_custom_command(TARGET ${whatIsBuilding} POST_BUILD
@@ -277,9 +292,9 @@ function(install_binaries whatIsBuilding whatIsBuildingLocation whatIsBinaryLoca
 endfunction(install_binaries)
 
 
-add_subdirectory(./core)
+add_subdirectory(core)
 
-include_directories(${GW_INC})
+include_directories(${GW_INC}) # GW_INC defined in core
 
 add_subdirectory(modules)
 

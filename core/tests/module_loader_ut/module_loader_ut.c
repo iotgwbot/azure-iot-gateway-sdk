@@ -80,6 +80,9 @@ static const size_t g_enabled_loaders[] =
 #ifdef DOTNET_BINDING_ENABLED
     , 1
 #endif
+#ifdef DOTNET_CORE_BINDING_ENABLED
+    , 1
+#endif
 };
 
 static const size_t LOADERS_COUNT = sizeof(g_enabled_loaders) / sizeof(g_enabled_loaders[0]);
@@ -247,12 +250,23 @@ static MODULE_LOADER Dotnet_Module_Loader =
     &Fake_Module_Loader_API
 };
 
+static MODULE_LOADER Dotnet_Core_Module_Loader =
+{
+    DOTNETCORE,
+    "dotnetcore",
+    NULL,
+    &Fake_Module_Loader_API
+};
+
 #ifdef __cplusplus
 extern "C"
 {
 #endif
 MOCK_FUNCTION_WITH_CODE(, const MODULE_LOADER*, DotnetLoader_Get)
 MOCK_FUNCTION_END(&Dotnet_Module_Loader)
+
+MOCK_FUNCTION_WITH_CODE(, const MODULE_LOADER*, DotnetCoreLoader_Get)
+MOCK_FUNCTION_END(&Dotnet_Core_Module_Loader)
 #ifdef __cplusplus
 }
 #endif
@@ -322,6 +336,7 @@ extern "C"
 #endif
 
 VECTOR_HANDLE real_VECTOR_create(size_t elementSize);
+VECTOR_HANDLE real_VECTOR_move(VECTOR_HANDLE handle);
 void real_VECTOR_destroy(VECTOR_HANDLE handle);
 
 /* insertion */
@@ -396,6 +411,7 @@ TEST_SUITE_INITIALIZE(TestClassInitialize)
 
     // Vector hooks
     REGISTER_GLOBAL_MOCK_HOOK(VECTOR_create, real_VECTOR_create);
+    REGISTER_GLOBAL_MOCK_HOOK(VECTOR_move, real_VECTOR_move);
     REGISTER_GLOBAL_MOCK_HOOK(VECTOR_destroy, real_VECTOR_destroy);
     REGISTER_GLOBAL_MOCK_HOOK(VECTOR_push_back, real_VECTOR_push_back);
     REGISTER_GLOBAL_MOCK_HOOK(VECTOR_erase, real_VECTOR_erase);
@@ -499,7 +515,9 @@ TEST_FUNCTION(ModuleLoader_Initialize_succeeds)
 #ifdef DOTNET_BINDING_ENABLED
     STRICT_EXPECTED_CALL(DotnetLoader_Get());
 #endif
-
+#ifdef DOTNET_CORE_BINDING_ENABLED
+    STRICT_EXPECTED_CALL(DotnetCoreLoader_Get());
+#endif
 
     for (size_t i = 0; i < LOADERS_COUNT; i++)
     {
@@ -1270,6 +1288,9 @@ TEST_FUNCTION(ModuleLoader_GetDefaultLoaderForType_succeeds)
 #ifdef NODE_BINDING_ENABLED
         , NODEJS
 #endif
+#ifdef NODE_CORE_BINDING_ENABLED
+        , DOTNETCORE
+#endif
     };
     for (size_t i = 0; i < sizeof(inputs) / sizeof(inputs[0]); i++)
     {
@@ -1312,8 +1333,8 @@ TEST_FUNCTION(ModuleLoader_ParseType_returns_UNKNOWN_for_unknown_loader_type)
 TEST_FUNCTION(ModuleLoader_ParseType_succeeds)
 {
     // arrange
-    char* inputs[] = { "native", "node", "java", "dotnet" };
-    MODULE_LOADER_TYPE expected[] = { NATIVE, NODEJS, JAVA, DOTNET };
+    char* inputs[] = { "native", "node", "java", "dotnet", "dotnetcore" };
+    MODULE_LOADER_TYPE expected[] = { NATIVE, NODEJS, JAVA, DOTNET, DOTNETCORE };
 
     for (size_t i = 0; i < sizeof(inputs) / sizeof(inputs[0]); i++)
     {
@@ -1325,12 +1346,12 @@ TEST_FUNCTION(ModuleLoader_ParseType_succeeds)
     }
 }
 
-// Tests_SRS_MODULE_LOADER_13_061: [ ModuleLoader_IsDefaultLoader shall return true if name is the name of a default module loader and false otherwise. The default module loader names are 'native', 'node', 'java' and 'dotnet'. ]
+// Tests_SRS_MODULE_LOADER_13_061: [ ModuleLoader_IsDefaultLoader shall return true if name is the name of a default module loader and false otherwise. The default module loader names are 'native', 'node', 'java' , 'dotnet' and 'dotnetcore'. ]
 TEST_FUNCTION(ModuleLoader_IsDefaultLoader_succeeds)
 {
     // arrange
-    char* inputs[] = { "native", "node", "java", "dotnet", "boo" };
-    bool expected[] = { true, true, true, true, false };
+    char* inputs[] = { "native", "node", "java", "dotnet", "dotnetcore", "boo" };
+    bool expected[] = { true, true, true, true, true,  false };
 
     for (size_t i = 0; i < sizeof(inputs) / sizeof(inputs[0]); i++)
     {

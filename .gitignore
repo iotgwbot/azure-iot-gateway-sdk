@@ -12,6 +12,8 @@
 *.suo
 *.user
 *.sln.docstates
+*.VC.db
+*.VC.opendb
 
 # Build results
 
@@ -223,8 +225,10 @@ api_reference/
 install-deps/
 Testing/Temporary/CTestCostData.txt
 
-# ignore package build folder
-build_packages/**
-
-# ignore package distribution definition files
+# Package distribution definition files
 !dist_pkgs/**
+
+# .NET Core Project Files
+project.lock.json
+.vs/
+restore.db
