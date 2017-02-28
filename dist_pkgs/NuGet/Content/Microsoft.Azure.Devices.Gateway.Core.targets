@@ -6,8 +6,8 @@
        <Link>%(FileName)%(Extension)</Link>
        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
      </None>
-     <NativeSymbols Include="$(MSBuildThisFileDirectory)**\*.pdb" />
-     <None Include="@(NativeSymbols)">
+     <NativeExes Include="$(MSBuildThisFileDirectory)**\*.exe" />
+     <None Include="@(NativeExes)">
        <Link>%(FileName)%(Extension)</Link>
        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
      </None>
