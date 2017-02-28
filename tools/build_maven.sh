@@ -29,7 +29,7 @@ cp $root/build/bindings/java/libjava_module_host.so ./src/main/resources
 cp $root/build/dist_pkgs/gw/gw                      ./src/main/resources
 
 # Publish to maven local repository
-mvn clean package
+mvn clean install
 [ $? -eq 0 ] || exit $?
 
 popd
