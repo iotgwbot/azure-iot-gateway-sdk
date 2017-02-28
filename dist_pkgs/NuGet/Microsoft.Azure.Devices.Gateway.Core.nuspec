@@ -15,7 +15,6 @@
     <tags>Microsoft Azure IoT Gateway SDK Device Module Developer Core Native</tags>
   </metadata>
   <files> 
-     <file src="..\..\bindings\dotnet\dotnet-binding\Microsoft.Azure.IoT.Gateway\bin\x86\Release\Microsoft.Azure.IoT.Gateway.dll" target="lib\net40" />
      <file src="..\..\build\bindings\dotnet\Release\dotnet.dll" target="build\net40" /> 
      <file src="..\..\build\dist_pkgs\gw\Release\gw.exe" target="build\net40" />
      <file src="..\..\build\core\Release\gateway.dll" target="build\x86" /> 

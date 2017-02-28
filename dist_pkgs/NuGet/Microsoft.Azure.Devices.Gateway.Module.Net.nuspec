@@ -20,11 +20,13 @@
     </dependencies>
   </metadata>
   <files>
+     <file src="..\..\bindings\dotnet\dotnet-binding\Microsoft.Azure.IoT.Gateway\bin\x86\Release\Microsoft.Azure.IoT.Gateway.dll" target="lib\net40" />
      <file src="..\..\build\samples\dotnet_binding_sample\Release\PrinterModule.dll" target="build\net40" />
      <file src="..\..\build\samples\dotnet_binding_sample\Release\SensorModule.dll" target="build\net40" />
-     <file src="content\module_dev_sample.json" target="content" />
+     <file src="..\..\bindings\dotnetcore\devdoc\images\flow_chart.png" target="images" />
+     <file src="content\module_dev_sample.json" target="build\net40" />
      <file src="content\Example.cs" target="content" />
-     <file src="content\README.txt" target="" />
+     <file src="content\README.md" target="" />
      <file src="content\Microsoft.Azure.Devices.Gateway.Module.Net.targets" target="build" />     
    </files> 
 </package>
