@@ -6,13 +6,8 @@
        <Link>%(FileName)%(Extension)</Link>
        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
      </None>
-     <ManagedSymbols Include="$(MSBuildThisFileDirectory)**\*.pdb" />
-     <None Include="@(ManagedSymbols)">
-       <Link>%(FileName)%(Extension)</Link>
-       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-     </None>
-     <ManagedExe Include="$(MSBuildThisFileDirectory)**\*.exe" />
-     <None Include="@(ManagedExe)">
+     <ManagedJson Include="$(MSBuildThisFileDirectory)**\*.json" />
+     <None Include="@(ManagedJson)">
        <Link>%(FileName)%(Extension)</Link>
        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
      </None>

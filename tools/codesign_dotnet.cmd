@@ -37,26 +37,28 @@ if %errorlevel% neq 0 goto :EOF
 mkdir %csu-output%
 if %errorlevel% neq 0 goto :EOF
 
-xcopy /q /y /R %root%bindings\dotnet\dotnet-binding\PrinterModule\bin\x86\Release_Delay_Sign\PrinterModule.dll %csu-source%
+REM Copy files to be signed to the tosign folder
+xcopy /q /y /R %root%bindings\dotnet\dotnet-binding\Microsoft.Azure.IoT.Gateway\bin\x86\Release\Microsoft.Azure.IoT.Gateway.dll %csu-source%
 if %errorlevel% neq 0  goto :EOF
 
-xcopy /q /y /R %root%bindings\dotnet\dotnet-binding\SensorModule\bin\x86\Release_Delay_Sign\SensorModule.dll %csu-source%
+xcopy /q /y /R %root%bindings\dotnet\dotnet-binding\PrinterModule\bin\x86\Release\PrinterModule.dll %csu-source%
 if %errorlevel% neq 0  goto :EOF
 
-xcopy /q /y /R %root%bindings\dotnet\dotnet-binding\Microsoft.Azure.IoT.Gateway\bin\x86\Release_Delay_Sign\Microsoft.Azure.IoT.Gateway.dll %csu-source%
+xcopy /q /y /R %root%bindings\dotnet\dotnet-binding\SensorModule\bin\x86\Release\SensorModule.dll %csu-source%
 if %errorlevel% neq 0  goto :EOF
 
 REM Auto-sign the managed dlls placed in the "tosign" Folder 
-csu.exe /s=True /w=True /i=%root%build\ToSign /o=%root%build\Signed /c1=72 /c2=401 /d="SN Signing Azure IoT SDK .NET Gateway binaries"
+csu.exe /s=True /w=True /i=%root%build\ToSign /o=%root%build\Signed /c1=401 /d="SN Signing Azure IoT SDK .NET Gateway binaries"
 if %errorlevel% neq 0 goto :EOF
 
-xcopy /q /y /R %csu-output%\PrinterModule.dll %root%bindings\dotnet\dotnet-binding\PrinterModule\bin\x86\Release_Delay_Sign 
+REM Copy the siged dlls from the signed folder to their original locations
+xcopy /q /y /R  %csu-output%\Microsoft.Azure.IoT.Gateway.dll  %root%bindings\dotnet\dotnet-binding\Microsoft.Azure.IoT.Gateway\bin\x86\Release
 if %errorlevel% neq 0  goto :EOF
 
-xcopy /q /y /R %csu-output%\SensorModule.dll %root%bindings\dotnet\dotnet-binding\SensorModule\bin\x86\Release_Delay_Sign
+xcopy /q /y /R %csu-output%\PrinterModule.dll %root%bindings\dotnet\dotnet-binding\PrinterModule\bin\x86\Release 
 if %errorlevel% neq 0  goto :EOF
 
-xcopy /q /y /R %csu-output%\Microsoft.Azure.IoT.Gateway.dll %root%bindings\dotnet\dotnet-binding\Microsoft.Azure.IoT.Gateway\bin\x86\Release_Delay_Sign
+xcopy /q /y /R %csu-output%\SensorModule.dll %root%bindings\dotnet\dotnet-binding\SensorModule\bin\x86\Release
 if %errorlevel% neq 0  goto :EOF
 
 REM Clean up the directories
