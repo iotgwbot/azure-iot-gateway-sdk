@@ -5,7 +5,7 @@ import java.net.*;
 import java.util.*;
 
 /**
- * Run "{JAR Folder\}gw.exe [options]" located in the current folder.
+ * Run "gw.exe [options]" located in the current folder or JAR folder.
  *
  */
 public class IoTGateway {
