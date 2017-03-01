@@ -11,9 +11,10 @@ The sample contains:
 1. A printer module (C#) that interprets telemetry from sensor and prints its content and properties into Console.
 2. A sensor module (C#) that publishes random data to the gateway.
 3. The .NET Microsoft.Azure.IoT.Gateway interface assembly.
-4. A sample gateway executable (gw.exe) file.
-5. The native binding layer interfaces for .NET, Java, and NodeJs (C++). Which includes `gateway.dll`, `aziotsharedutil.dll`, `nanomsg.dll`, `dotnet.dll`, `java_module_host.dll`, `node.dll`, `nodejs_binding.dll`.
-6. A `module_dev_sample.json` file that is used to configure which module the gateway will use.
+4. A sample native (C++) gateway executable (gw.exe) file.
+5. The native (C++) binding layer interfaces for .NET, Java, and NodeJs (C++). Which includes `gateway.dll`, `aziotsharedutil.dll`, `nanomsg.dll`, `dotnet.dll`, `java_module_host.dll`, `node.dll`, `nodejs_binding.dll`.
+6. The `Microsoft.Azure.IoT.Gateway.dll` (C#) which contains the Azure IoT Gateway module interface definition.
+7. A `module_dev_sample.json` file that is used to configure which module the gateway will use.
 
 Prerequisites
 --------------
@@ -113,8 +114,8 @@ Modules may also implement the `IGatewayModuleStart` interface. The Start method
 		"loader": {
 					"name": "dotnet",
 					"entrypoint": {
-						"dotnet_module_path": "<Your Namespace>",
-						"dotnet_module_entry_class": "<Your Namespace>.<Your Project Name>"
+						"dotnet_module_path": "<Your Assemblies Name>",
+						"dotnet_module_entry_class": "<Your Namespace Name>.<Your Class Name>"
 					}
 				},
 		"args": "module configuration"

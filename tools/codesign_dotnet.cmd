@@ -48,7 +48,7 @@ xcopy /q /y /R %root%bindings\dotnet\dotnet-binding\SensorModule\bin\x86\Release
 if %errorlevel% neq 0  goto :EOF
 
 REM Auto-sign the managed dlls placed in the "tosign" Folder 
-csu.exe /s=True /w=True /i=%root%build\ToSign /o=%root%build\Signed /c2=401 /d="SN Signing Azure IoT SDK .NET Gateway binaries"
+csu.exe /s=True /w=True /i=%root%build\ToSign /o=%root%build\Signed /c1=401 /d="SN Signing Azure IoT SDK .NET Gateway binaries"
 if %errorlevel% neq 0 goto :EOF
 
 REM Copy the siged dlls from the signed folder to their original locations
