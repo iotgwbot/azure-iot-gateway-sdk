@@ -24,5 +24,6 @@
      <file src="..\..\build_nodejs\node\Release\node.dll" target="build\x86" />
      <file src="..\..\build\bindings\nodejs\Release\nodejs_binding.dll" target="build\x86" />
      <file src="content\Microsoft.Azure.Devices.Gateway.Core.targets" target="build" />
+     <file src="content\READMECore.md" target="README.md" />
    </files> 
 </package>
