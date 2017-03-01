@@ -10,7 +10,7 @@ rem Remove trailing slash
 set current-path=%current-path:~0,-1%
 
 set root=%current-path%\..
-set build-root=%root%\build\dist_pkgs\maven\az-iot-gw-win
+set build-root=%root%\build\dist_pkgs\maven\iot-gateway-win32
 
 rem Resolve to fully qualified path
 for %%i in ("%root%") do set root=%%~fi
@@ -37,8 +37,8 @@ pushd %build-root%
 
 rem Copy maven package source files
 mkdir .\src
-xcopy %root%\dist_pkgs\maven\az-iot-gw-win\src .\src /S /Q
-copy %root%\dist_pkgs\maven\az-iot-gw-win\pom.xml .\pom.xml
+xcopy %root%\dist_pkgs\maven\iot-gateway-win32\src .\src /S /Q
+copy %root%\dist_pkgs\maven\iot-gateway-win32\pom.xml .\pom.xml
 mkdir .\src\main\resources
 copy %root%\License.txt .\src\main\resources\License.txt
 
