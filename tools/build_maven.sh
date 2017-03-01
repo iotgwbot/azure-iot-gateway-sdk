@@ -15,7 +15,7 @@ pushd $build_root
 
 # Copy maven package source files
 mkdir ./src
-cp -r $root/dist_pkgs/maven/iot-gateway-linux/src/. ./src
+cp -r $root/dist_pkgs/maven/iot-gateway-common/src/. ./src
 cp $root/dist_pkgs/maven/iot-gateway-linux/pom.xml ./pom.xml
 mkdir ./src/main/resources
 cp $root/License.txt ./src/main/resources/LICENSE
