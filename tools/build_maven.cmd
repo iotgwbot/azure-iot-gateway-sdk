@@ -37,7 +37,7 @@ pushd %build-root%
 
 rem Copy maven package source files
 mkdir .\src
-xcopy %root%\dist_pkgs\maven\iot-gateway-win32\src .\src /S /Q
+xcopy %root%\dist_pkgs\maven\iot-gateway-common\src .\src /S /Q
 copy %root%\dist_pkgs\maven\iot-gateway-win32\pom.xml .\pom.xml
 mkdir .\src\main\resources
 copy %root%\License.txt .\src\main\resources\License.txt

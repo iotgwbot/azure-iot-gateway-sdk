@@ -1,4 +1,4 @@
-package com.microsoft.azure.gateway;
+package com.microsoft.azure.devices.gateway;
 
 import java.io.*;
 import java.net.*;
