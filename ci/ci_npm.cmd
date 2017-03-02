@@ -59,8 +59,20 @@ rem -- Build the NPM packages for Windows.
 rem -----------------------------------------------------------------------------
 echo Y | call %root%\tools\build_npm_win.cmd --config=Release
 if %errorlevel% neq 0 set build_error=1
-echo NPM packages Build Error: %build_error%
+echo NPM Windows Packages Build Error: %build_error%
 if %build_error% neq 0 exit /b 1
+
+rem -----------------------------------------------------------------------------
+rem -- Build the NPM packages for any platform.
+rem -----------------------------------------------------------------------------
+echo Y | call %root%\tools\build_npm_cross_platform.cmd
+if %errorlevel% neq 0 set build_error=1
+echo NPM cross platform packages Build Error: %build_error%
+if %build_error% neq 0 exit /b 1
+
+rem -----------------------------------------------------------------------------
+rem -- Upload the *.tgz to Azure File Share Service.
+rem -----------------------------------------------------------------------------
 
 rem -----------------------------------------------------------------------------
 rem -- Publish the NPM package to Myget as preview.
