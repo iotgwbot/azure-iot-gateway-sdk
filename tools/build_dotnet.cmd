@@ -16,8 +16,8 @@ for %%i in ("%build-root%") do set build-root=%%~fi
 rem ensure nuget.exe exists
 where /q nuget.exe
 if not !errorlevel! == 0 (
-@Echo Azure IoT Gateway SDK needs to download nuget.exe from https://www.nuget.org/nuget.exe 
-@Echo https://www.nuget.org 
+@Echo Azure IoT Gateway SDK needs to download nuget.exe from https://www.nuget.org/nuget.exe
+@Echo https://www.nuget.org
 choice /C yn /M "Do you want to download and run nuget.exe"
 if not !errorlevel!==1 goto :eof
 rem if nuget.exe is not found, then ask user
@@ -85,14 +85,8 @@ if not !errorlevel!==0 exit /b !errorlevel!
 
 rem ------------------
 rem -- run unit tests
-
-if %build-config% equ Release_Delay_Sign (
-Echo.
-Echo Build configuration is Release_Delay_Sign, skipping unit tests.
-) else (
 call  vstest.console "%build-root%\bindings\dotnet\dotnet-binding\Microsoft.Azure.IoT.Gateway.Test\bin\%build-platform%\%build-config%\Microsoft.Azure.IoT.Gateway.Test.dll" /Platform:%build-platform% /inIsolation
 if not !errorlevel!==0 exit /b !errorlevel!
-)
 rem ------------------
 
 rem -----------------------------------------------------------------------------
@@ -115,10 +109,10 @@ call :_run-msbuild "Build" %1 %2 %3
 goto :eof
 
 :usage
-echo build.cmd [options]
+echo build_dotnet.cmd [options]
 echo options:
 echo  -c, --clean           delete artifacts from previous build before building
-echo  --config ^<value^>      [Debug] build configuration (e.g. Debug, Release, Release_Delay_Sign)
+echo  --config ^<value^>      [Debug] build configuration (e.g. Debug, Release)
 echo  --platform ^<value^>    [x86] build platform (e.g. x86, x64, ...)
 goto :eof
 

@@ -30,7 +30,7 @@ xcopy %root%\dist_pkgs\npm\az-iot-gw-module-js .\az-iot-gw-module-js /S /Q
 copy %root%\LICENSE.txt az-iot-gw\LICENSE
 copy %root%\LICENSE.txt az-iot-gw-module-js\LICENSE
 
-rem copy files for azure iot gateway module development.
+rem Copy files for azure iot gateway module development.
 mkdir az-iot-gw-module-js\samples\simple\modules
 xcopy %root%\samples\nodejs_simple_sample\nodejs_modules az-iot-gw-module-js\samples\simple\modules /S /Q
 
@@ -39,5 +39,7 @@ call npm pack .\az-iot-gw
 call npm pack .\az-iot-gw-module-js
 
 popd
+
+@endlocal
 
 goto :eof

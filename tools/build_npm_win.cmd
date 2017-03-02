@@ -26,16 +26,27 @@ rem Copy windows package definition files into npm folder.
 xcopy %root%\dist_pkgs\npm\az-iot-gw-win .\az-iot-gw-win /S /Q
 copy %root%\LICENSE.txt az-iot-gw-win\LICENSE
 
-rem copy binary files for azure iot gateway.
-copy %root%\build\core\Debug\gateway.dll az-iot-gw-win\bin
+rem Copy core binary files for azure iot gateway.
+copy %root%\build\core\Release\gateway.dll az-iot-gw-win\bin
+copy %root%\build\core\Release\gateway.pdb az-iot-gw-win\bin
 copy %root%\install-deps\bin\aziotsharedutil.dll az-iot-gw-win\bin
 copy %root%\install-deps\bin\\nanomsg.dll az-iot-gw-win\bin
 copy %root%\build_nodejs\node\Release\node.dll az-iot-gw-win\bin
-copy %root%\build\bindings\nodejs\Debug\nodejs_binding.dll az-iot-gw-win\bin
-copy %root%\build\dist_pkgs\gw\Debug\gw.exe az-iot-gw-win\bin
+copy %root%\build_nodejs\node\Release\node.pdb az-iot-gw-win\bin
+copy %root%\build\bindings\nodejs\Release\nodejs_binding.dll az-iot-gw-win\bin
+copy %root%\build\bindings\nodejs\Release\nodejs_binding.pdb az-iot-gw-win\bin
+copy %root%\build\bindings\java\Release\java_module_host.dll az-iot-gw-win\bin
+copy %root%\build\bindings\java\Release\java_module_host.pdb az-iot-gw-win\bin
+copy %root%\build\bindings\dotnet\Release\dotnet.dll az-iot-gw-win\bin
+copy %root%\build\bindings\dotnet\Release\dotnet.pdb az-iot-gw-win\bin
+copy %root%\build\dist_pkgs\gw\Release\gw.exe az-iot-gw-win\bin
+copy %root%\build\dist_pkgs\gw\Release\gw.pdb az-iot-gw-win\bin
 
+rem Generate archived file for uploading.
 npm pack .\az-iot-gw-win
 
 popd
+
+@endlocal
 
 goto :eof
